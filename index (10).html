@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Uploader</title>
+</head>
+<body>
+  <h1>Image Uploader</h1>
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" name="image" accept="image/*" required>
+    <button type="submit">Upload Image</button>
+  </form>
+  <div id="result"></div>
+
+  <script>
+    document.getElementById('uploadForm').addEventListener('submit', async function (event) {
+      event.preventDefault();
+      const formData = new FormData(this);
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const resultDiv = document.getElementById('result');
+        if (response.ok) {
+          const data = await response.text();
+          resultDiv.innerHTML = `<p>${data}</p>`;
+        } else {
+          resultDiv.innerHTML = '<p>Failed to upload image.</p>';
+        }
+      } catch (error) {
+        console.error('Error uploading image:', error);
+      }
+    });
+  </script>
+</body>
+</html>
